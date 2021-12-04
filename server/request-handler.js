@@ -68,7 +68,7 @@ var requestHandler = function(request, response) {
     console.log('bad URL!');
     var statusCode = 404;
     response.writeHead(statusCode, headers);
-    response.end();
+    response.end(); //does this really end things?
   }
 
   if (method === 'OPTIONS') {
@@ -78,40 +78,40 @@ var requestHandler = function(request, response) {
     // response.end(JSON.stringify(testData));
   }
 
-  if (method === 'GET' && url === '/classes/messages') {
+  if (method === 'GET') {
     var statusCode = 200;
     response.writeHead(statusCode, headers);
     response.end(JSON.stringify(testData));
   }
 
   // how to respond to POST
-  if (method === 'POST' && url === '/classes/messages') {
+  if (method === 'POST') {
     var statusCode = 201;
     var data;
     request.on('data', (chunk) => { // chunk is a stringified object message
       data = JSON.parse(chunk);
-      var dataRequirementSatisfied = true;
-      var requiredFields = ['text', 'username'];
 
-      for (var field of requiredFields) {
-        if (data[field] === undefined) {
-          dataRequirementSatisfied = false;
-        }
-      }
 
-      if (!dataRequirementSatisfied) {
-        var statusCode = 404;
-        console.log('FAILURE: no username');
-        response.writeHead(statusCode, headers);
-        response.end();
-      } else {
-        testData.unshift(data);
-        console.log('test data here!', testData);
-        console.log('URL here!', url);
+      // var dataRequirementSatisfied = true;
+      // var requiredFields = ['text', 'username'];
 
-        response.writeHead(statusCode, headers);
-        response.end(JSON.stringify(testData));
-      }
+      // for (var field of requiredFields) {
+      //   if (data[field] === undefined) {
+      //     dataRequirementSatisfied = false;
+      //   }
+      // }
+
+      // if (!dataRequirementSatisfied) {
+      //   var statusCode = 404;
+      //   console.log('FAILURE: no username');
+      //   response.writeHead(statusCode, headers);
+      //   response.end();
+      // } else {
+
+      testData.unshift(data);
+      response.writeHead(statusCode, headers);
+      response.end(JSON.stringify(testData));
+
     });
   }
   // Request and Response come from node's http module.
